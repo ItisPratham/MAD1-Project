@@ -13,3 +13,12 @@ ie
 A user can have multiple reserve parking spot history.
 A parking lot will have multiple parking spots.
 A parking spots will have multiple reserve parking spots history.
+
+29th June 2025
+Milestone2 Completed
+Implemented User registration and login with required fields.
+Created an Admin login in which admin is predifined so no registration.
+Redirect to role-specific dashboards after login, although dashboards are not yet created.
+Added sessions so to prevent unauthorized access to routes.
+ie
+Without login, user as well as admin cannot access their dashboards.
