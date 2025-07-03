@@ -4,9 +4,9 @@
 <div class="mt-5">
     <h1 class="mt-2 mb-4 fw-bold text-center">Welcome to Vehicle Parking Services</h1>
     <div class="d-flex justify-content-center gap-4 mb-5">
-        <a href="{{ url_for('admin_login') }}" class="btn btn-outline-primary">Admin Login</a>
-        <a href="{{ url_for('user_registration') }}" class="btn btn-outline-primary">User Registration</a>
-        <a href="{{ url_for('user_login') }}" class="btn btn-outline-primary">User Login</a>
+        <a href="{{ url_for('auth_routes.admin_login') }}" class="btn btn-outline-primary">Admin Login</a>
+        <a href="{{ url_for('auth_routes.user_registration') }}" class="btn btn-outline-primary">User Registration</a>
+        <a href="{{ url_for('auth_routes.user_login') }}" class="btn btn-outline-primary">User Login</a>
     </div>
 
     <img src="{{ url_for('static', filename='images/parking.jpg') }}" alt="Parking Image" class="img-fluid shadow">

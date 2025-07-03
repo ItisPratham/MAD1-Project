@@ -22,3 +22,12 @@ Redirect to role-specific dashboards after login, although dashboards are not ye
 Added sessions so to prevent unauthorized access to routes.
 ie
 Without login, user as well as admin cannot access their dashboards.
+
+3rd July 2025
+Milestone3 Completed
+Added Admin functionalities
+Create/edit/delete parking lots.
+View parking lot details and spot status in dashboard.
+Automatically create parking spots based on the maximum capacity of the lot.
+View parking spots details ie current and past reservations.
+Admin will be able to see all the user's and also individual users' track record.

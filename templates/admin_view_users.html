@@ -1,0 +1,32 @@
+{% extends "base_admin_dashboard.html" %}
+
+{% block title %}View All Users{% endblock %}
+
+{% block header %}User List{% endblock %}
+
+{% block content %}
+
+    <table class="table table-bordered table-striped text-center">
+        <thead class="table-bordered-dark">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>
+                        <a href="{{ url_for('admin_routes.view_user', user_id=user.id) }}">{{ user.id }}</a>
+                    </td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.age }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

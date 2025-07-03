@@ -3,3 +3,36 @@
     margin: 50px auto;
     padding: 20px;
 }
+
+.btn-status-a {
+    color: green;
+    border: 1px solid green;
+    background-color: transparent;
+}
+
+.btn-status-o {
+    color: red;
+    border: 1px solid red;
+    background-color: transparent;
+}
+
+.btn-status-i {
+    color: grey;
+    border: 1px solid grey;
+    background-color: transparent;
+}
+
+.btn-status-a:hover {
+    background-color: green;
+    color: white;
+}
+
+.btn-status-o:hover {
+    background-color: red;
+    color: white;
+}
+
+.btn-status-i:hover {
+    background-color: grey;
+    color: white;
+}

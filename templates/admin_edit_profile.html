@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Admin Profile{% endblock %}
+
+{% block body %}
+
+<div class="centered-form">
+    <h2 class="text-center mb-4">Edit Profile</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">New Username</label>
+            <input id="username" type="text" class="form-control" name="Username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" type="password" class="form-control" name="New Password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </form>
+</div>
+
+{% endblock %}

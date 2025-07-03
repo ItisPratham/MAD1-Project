@@ -1,7 +1,41 @@
-{% extends "base.html" %}
+{% extends "base_admin_dashboard.html" %}
 
 {% block title %}Admin Dashboard{% endblock %}
 
-{% block body %}
-ADMIN DASHBOARD
+{% block header %}Parking Lots{% endblock %}
+
+
+{% block content %}
+
+    {% for item in data %}
+        {% set lot = item.lot %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ lot.name }}</strong> | {{ lot.address }} ({{ lot.pin_code }}) | ₹{{ lot.price }}/hr
+                    <br>
+                    <small class="text-muted">
+                        {{ item.available }} / {{ item.total_active }} Available | Inactive: {{ item.inactive }}
+                    </small>
+                </div>
+                <a href="{{ url_for('admin_routes.edit_lot', lot_id=lot.id) }}" class="btn btn-outline-dark">Edit</a>
+            </div>
+            <div class="card-body d-flex flex-wrap gap-2">
+                {% for spot in lot.spots %}
+                    {% if spot.status == 'A' %}
+                        <a href="{{ url_for('admin_routes.view_parking_spot', spot_id=spot.id) }}" class="btn btn-status-a">A</a>
+                    {% elif spot.status == 'O' %}
+                        <a href="{{ url_for('admin_routes.view_parking_spot', spot_id=spot.id) }}" class="btn btn-status-o">O</a>
+                    {% elif spot.status == 'I' %}
+                        <a href="{{ url_for('admin_routes.view_parking_spot', spot_id=spot.id) }}" class="btn btn-status-i">I</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('admin_routes.add_lot') }}" class="btn btn-primary">Add New Lot</a>
+    </div>
+
 {% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+<div class="mt-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-2 text-start">
+            <span class="btn btn-secondary disabled">Welcome Admin</span>
+        </div>
+        <div class="col-8 d-flex justify-content-center gap-3">
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
+            <a href="{{ url_for('admin_routes.user_detail') }}" class="btn btn-outline-primary">User Details</a>
+            <a href="{{ url_for('auth_routes.logout') }}" class="btn btn-outline-primary">Logout</a>
+        </div>
+        <div class="col-2 text-end">
+            <a href="{{ url_for('admin_routes.edit_profile') }}" class="btn btn-outline-secondary">Edit Profile</a>
+        </div>
+    </div>
+
+    <div class="text-center mb-4">
+        <span class="btn btn-outline-dark disabled w-100">
+            {% block header %}
+            {% endblock %}
+        </span>
+    </div>
+
+    {% block content %}Content{% endblock %}
+</div>
+
+{% endblock %}

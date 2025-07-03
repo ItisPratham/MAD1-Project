@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Parking Lot{% endblock %}
+
+{% block body %}
+<div class="centered-form">
+    <h2 class="text-center mb-4">Add New Parking Lot</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="lot_name" class="form-label">Lot Name</label>
+            <input id="lot_name" type="text" class="form-control" name="LotName" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price per Hour</label>
+            <input id="price" type="number" step="0.1" class="form-control" name="Price" required>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" class="form-control" name="Address" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="pin_code" class="form-label">Pin Code</label>
+            <input id= "pin_code" type="number" class="form-control" name="PinCode" required>
+        </div>
+        <div class="mb-3">
+            <label for="spots_count" class="form-label">Number of Spots</label>
+            <input id="spots_count" type="number" class="form-control" name="SpotsCount" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Add Lot</button>
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

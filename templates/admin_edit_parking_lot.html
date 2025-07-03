@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Parking Lot{% endblock %}
+
+{% block body %}
+<div class="centered-form">
+    <h2 class="text-center mb-4">Edit Parking Lot</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="lot_id" class="form-label">Lot Id</label>
+            <input id="lot_id" type="text" class="form-control" name="LotId" value="{{ lot.id }}" readonly required>
+        </div>
+        <div class="mb-3">
+            <label for="lot_name" class="form-label">New Lot Name</label>
+            <input id="lot_name" type="text" class="form-control" name="LotName" value="{{ lot.name }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price per Hour</label>
+            <input id="price" type="number" step="0.1" class="form-control" name="Price" value="{{ lot.price }}" required>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" class="form-control" name="Address" readonly required>{{ lot.address }}</textarea>
+        </div>
+        <div class="mb-3">
+            <label for="pin_code" class="form-label">Pin Code</label>
+            <input id= "pin_code" type="number" class="form-control" name="PinCode" value="{{ lot.pin_code }}" readonly required>
+        </div>
+        <div class="mb-3">
+            <label for="spots_count" class="form-label">Number of Spots</label>
+            <input id="spots_count" type="number" class="form-control" name="SpotsCount" value="{{ lot.spots_count }}" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Update Lot</button>
+            <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-secondary ms-2">Cancel</a>
+        </div>
+    </form>
+    {% if can_delete_spot %}
+    <form method="post" action="{{ url_for('admin_routes.delete_parking_lot', lot_id=lot.id) }}">
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-danger">Deactivate Lot</button>
+        </div>
+    </form>
+    {% else %}
+    <div class="alert alert-warning text-center mt-3">
+        Cannot deactivate this parking lot because some spots are currently occupied.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
