@@ -7,15 +7,14 @@
 
 {% block content %}
 
-    {% for item in data %}
-        {% set lot = item.lot %}
+    {% for lot in parking_lots %}
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <strong>{{ lot.name }}</strong> | {{ lot.address }} ({{ lot.pin_code }}) | ₹{{ lot.price }}/hr
                     <br>
                     <small class="text-muted">
-                        {{ item.available }} / {{ item.total_active }} Available | Inactive: {{ item.inactive }}
+                        {{ lot.available }} / {{ lot.available + lot.occupied }} Available | Inactive: {{ lot.inactive }}
                     </small>
                 </div>
                 <a href="{{ url_for('admin_routes.edit_lot', lot_id=lot.id) }}" class="btn btn-outline-dark">Edit</a>

@@ -9,3 +9,17 @@ class ParkingLot(db.Model):
     pin_code = db.Column(db.Integer)
     spots_count = db.Column(db.Integer, nullable=False)
     spots = db.relationship('ParkingSpot', backref='lot')
+
+    @property
+    def available(self):
+        return sum(1 for s in self.spots if s.status == 'A')
+
+    @property
+    def occupied(self):
+        return sum(1 for s in self.spots if s.status == 'O')
+
+    @property
+    def inactive(self):
+        return sum(1 for s in self.spots if s.status == 'I')
+    
+    

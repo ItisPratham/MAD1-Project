@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Edit User Profile{% endblock %}
+
+{% block body %}
+
+<div class="centered-form">
+    <h2 class="text-center mb-4">Edit Profile</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="id" class="form-label">Id</label>
+            <input id="username" type="text" class="form-control" name="Id" value="{{ user.id }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input id="name" type="text" class="form-control" name="Name" required>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="form-label">New Username(email)</label>
+            <input id="username" type="email" class="form-control" name="Username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input id="password" type="password" class="form-control" name="Password" required>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success">Save Changes</button>
+            <a href="{{ url_for('user_routes.user_dashboard') }}" class="btn btn-secondary ms-3">Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

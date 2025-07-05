@@ -17,7 +17,7 @@ def user_registration():
         db.session.commit()
         session['username'] = username
         session['role'] = 'user'
-        return render_template('user_dashboard.html')
+        return redirect(url_for('user_routes.user_dashboard'))
     return render_template('user_registration.html')
 
 @auth_routes.route('/user-login', methods=['GET', 'POST'])

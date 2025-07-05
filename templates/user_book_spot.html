@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Book Spot{% endblock %}
+
+{% block body %}
+
+<div class="centered-form">
+    <h2 class="text-center mb-4">Book Parking Spot</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="spot_id" class="form-label">Spot ID</label>
+            <input type="text" id="spot_id" class="form-control" value="{{ spot.id }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="lot_id" class="form-label">Lot ID</label>
+            <input type="text" id="lot_id" class="form-control" value="{{ spot.lot.id }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="lot_name" class="form-label">Lot Name</label>
+            <input type="text" id="lot_name" class="form-control" value="{{ spot.lot.name }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="lot_address" class="form-label">Lot Address</label>
+            <input type="text" id="lot_address" class="form-control" value="{{ spot.lot.address }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="cost" class="form-label">Cost per Hour</label>
+            <input type="text" id="cost" class="form-control" value="₹{{ spot.lot.price }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="user_id" class="form-label">User ID</label>
+            <input type="text" id="user_id" class="form-control" value="{{ user.id }}" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label for="vehicle_number" class="form-label">Vehicle Number</label>
+            <input type="text" id="vehicle_number" name="vehicle_number" class="form-control" placeholder="Enter your vehicle number" required>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-success">Reserve</button>
+            <a href="{{ url_for('user_routes.user_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

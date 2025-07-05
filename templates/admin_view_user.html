@@ -9,14 +9,15 @@
     <table class="table table-bordered table-striped text-center">
         <thead class="table-bordered-dark">
             <tr>
-                <th>Reservation ID</th>
+                <th>Res. ID</th>
                 <th>User ID</th>
                 <th>Username</th>
                 <th>Spot ID</th>
-                <th>Lot ID</th>
+                <th>Lot Name</th>
+                <th>Vehicle no</th>
                 <th>Parking Time</th>
                 <th>Leaving Time</th>
-                <th>Cost/hourly</th>
+                <th>Total Cost</th>
             </tr>
         </thead>
         <tbody>
@@ -26,7 +27,8 @@
                 <td>{{ r.user.id }}</td>
                 <td>{{ r.user.username }}</td>
                 <td>{{ r.spot.id }}</td>
-                <td>{{ r.spot.lot.id}}</td>
+                <td>{{ r.spot.lot.name }}</td>
+                <td>{{ r.vehicle_no }}</td>
                 <td>{{ r.parking_timestamp.strftime('%H:%M %d-%b-%y') }}</td>
                 <td>
                     {% if r.leaving_timestamp %}
@@ -35,7 +37,13 @@
                         <em>Active</em>
                     {% endif %}
                 </td>
-                <td>{{ r.cost_per_unit_time }}</td>
+                <td>
+                    {% if r.leaving_timestamp %}
+                        {{ r.total_cost }}
+                    {% else %}
+                        <em>Cant calculate yet</em>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>

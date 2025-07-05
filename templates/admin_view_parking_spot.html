@@ -11,9 +11,15 @@
         <h3>Parking Spot Details</h3>
         <div>
             <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-secondary">Close</a>
+            {% if spot.status == 'A' %}
             <form action="{{ url_for('admin_routes.delete_parking_spot', spot_id=spot.id) }}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="submit" class="btn btn-danger">Deactivate</button>
             </form>
+            {% elif spot.status == 'I' %}
+            <form action="{{ url_for('admin_routes.activate_parking_spot', spot_id=spot.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-success">Activate</button>
+            </form>
+            {% endif %}
         </div>
     </div>
     <div class="card mb-4">
@@ -29,6 +35,7 @@
             <tr>
                 <th>Reservation ID</th>
                 <th>User ID</th>
+                <th>Vehicle no.</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Cost / hr</th>
@@ -39,6 +46,7 @@
             <tr>
                 <td>{{ r.id }}</td>
                 <td>{{ r.user_id }}</td>
+                <td>{{ r.vehicle_no }}</td>
                 <td>{{ r.parking_timestamp.strftime('%H:%M %d-%m-%y') }}</td>
                 <td>
                     {% if r.leaving_timestamp %}

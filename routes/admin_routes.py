@@ -7,14 +7,7 @@ admin_routes = Blueprint('admin_routes', __name__)
 def admin_dashboard():
     if session.get('username') and session.get('role') == 'admin':
         parking_lots = ParkingLot.query.all()
-        data = []
-        for lot in parking_lots:
-            spots = lot.spots
-            available = sum(1 for s in spots if s.status == 'A')
-            occupied = sum(1 for s in spots if s.status == 'O')
-            inactive = sum(1 for s in spots if s.status == 'I')
-            data.append({'lot': lot, 'available': available, 'total_active': available + occupied, 'inactive': inactive})
-        return render_template('admin_dashboard.html', data=data)
+        return render_template('admin_dashboard.html', parking_lots=parking_lots)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-add-parking-lot', methods=['GET', 'POST'])
@@ -61,21 +54,17 @@ def user_detail():
 @admin_routes.route('/admin-view-user/<int:user_id>')
 def view_user(user_id):
     if session.get('username') and session.get('role') == 'admin':
-        user = User.query.get(user_id)
+        user = User.query.get_or_404(user_id)
         reservations = ReserveParkingSpot.query.filter_by(user_id=user_id).all()
-        if not user:
-            return render_template('error.html', message="User not found", retry_url=url_for('admin_routes.user_detail'))
         return render_template('admin_view_user.html', user=user, reservations=reservations)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-edit-parking-lot/<int:lot_id>', methods=['GET', 'POST'])
 def edit_lot(lot_id):
     if session.get('username') and session.get('role') == 'admin':
-        lot = ParkingLot.query.get(lot_id)
-        if not lot:
-            return render_template('error.html', message="Lot not found", retry_url=url_for('admin_routes.admin_dashboard'))
+        lot = ParkingLot.query.get_or_404(lot_id)
         if request.method == 'POST':
-            lot.lot_name = request.form['LotName']
+            lot.name = request.form['LotName']
             lot.price = float(request.form['Price'])
             spots_count = int(request.form['SpotsCount'])
             active_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status='A').order_by(ParkingSpot.id.desc()).all()
@@ -109,9 +98,7 @@ def edit_lot(lot_id):
 @admin_routes.route('/admin-delete-parking-lot/<int:lot_id>', methods=['POST'])
 def delete_parking_lot(lot_id):
     if session.get('username') and session.get('role') == 'admin':
-        lot = ParkingLot.query.get(lot_id)
-        if not lot:
-            return render_template('error.html', message="Parking lot not found.", retry_url=url_for('admin_routes.admin_dashboard'))
+        lot = ParkingLot.query.get_or_404(lot_id)
         active_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status='A').all()
         for spot in active_spots:
             spot.status = 'I'
@@ -122,7 +109,7 @@ def delete_parking_lot(lot_id):
 @admin_routes.route('/admin-view-parking-spot/<int:spot_id>', )
 def view_parking_spot(spot_id):
     if session.get('username') and session.get('role') == 'admin':
-        spot = ParkingSpot.query.get(spot_id)
+        spot = ParkingSpot.query.get_or_404(spot_id)
         if not spot:
             return render_template('error.html', message="Parking Spot not found.", retry_url=url_for('admin_routes.admin_dashboard'))
         reservations = ReserveParkingSpot.query.filter_by(spot_id=spot_id).order_by(ReserveParkingSpot.parking_timestamp.desc()).all()
@@ -132,12 +119,21 @@ def view_parking_spot(spot_id):
 @admin_routes.route('/admin-delete-parking-spot/<int:spot_id>', methods=['POST'])
 def delete_parking_spot(spot_id):
     if session.get('username') and session.get('role') == 'admin':
-        spot = ParkingSpot.query.get(spot_id)
-        if not spot:
-            return render_template('error.html', message="Parking Spot not found.", retry_url=url_for('admin_routes.admin_dashboard'))
+        spot = ParkingSpot.query.get_or_404(spot_id)
         if spot.status != 'A':
             return render_template('error.html', message="Cannot deactivate the spot as it is not available.", retry_url=url_for('admin_routes.view_parking_spot', spot_id=spot_id))
         spot.status = 'I'
+        db.session.commit()
+        return redirect(url_for('admin_routes.admin_dashboard'))
+    return redirect(url_for('auth_routes.admin_login'))
+
+@admin_routes.route('/admin-activate-parking-spot/<int:spot_id>', methods=['POST'])
+def activate_parking_spot(spot_id):
+    if session.get('username') and session.get('role') == 'admin':
+        spot = ParkingSpot.query.get_or_404(spot_id)
+        if spot.status != 'I':
+            return render_template('error.html', message="Cannot activate the available spot.", retry_url=url_for('admin_routes.view_parking_spot', spot_id=spot_id))
+        spot.status = 'A'
         db.session.commit()
         return redirect(url_for('admin_routes.admin_dashboard'))
     return redirect(url_for('auth_routes.admin_login'))

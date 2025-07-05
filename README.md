@@ -31,3 +31,15 @@ View parking lot details and spot status in dashboard.
 Automatically create parking spots based on the maximum capacity of the lot.
 View parking spots details ie current and past reservations.
 Admin will be able to see all the user's and also individual users' track record.
+
+5th July 2025
+Milestone4 Completed
+Added following to User functionalities:
+View available parking lots.
+Auto-allocation/Reservation of the first available spot.
+Occupy and Release a spot while tracking timestamp.
+Track timestamps for reservation and View parking history.
+Show duration of parking spot once its released.
+Auto calculation of total cost once the spot is released.
+View current active parkings.
+Edit User details.

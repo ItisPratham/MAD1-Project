@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}User Parking Spot Details{% endblock %}
+
+{% block body %}
+
+<div class="centered-form">
+    <h2 class="text-center mb-4">Parking Spot Details</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label for="reservation_id" class="form-label">Reservation ID</label>
+            <input id="reservation_id" type="text" class="form-control" value="{{ reservation.id }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="spot_id" class="form-label">Spot ID</label>
+            <input id="spot_id" type="text" class="form-control" value="{{ reservation.spot.id }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="lot_name" class="form-label">Lot Name</label>
+            <input id="lot_name" type="text" class="form-control" value="{{ reservation.spot.lot.name }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="lot_address" class="form-label">Lot Address</label>
+            <input id="lot_address" type="text" class="form-control" value="{{ reservation.spot.lot.address }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="vehicle_no" class="form-label">Vehicle Number</label>
+            <input id="vehicle_no" type="text" class="form-control" value="{{ reservation.vehicle_no }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="parking_timestamp" class="form-label">Parking Time</label>
+            <input id="parking_timestamp" type="text" class="form-control" value="{{ reservation.parking_timestamp.strftime('%H:%M %d-%b-%y') }}" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="leaving_timestamp" class="form-label">Release Time</label>
+            {% if reservation.leaving_timestamp %}
+                <input id="leaving_timestamp" type="text" class="form-control" value="{{ reservation.leaving_timestamp.strftime('%H:%M %d-%b-%y') }}" readonly>
+            {% else %}
+                <input id="leaving_timestamp" type="text" class="form-control" value="Active" readonly>
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            <label for="total_cost" class="form-label">Total Cost</label>
+            {% if reservation.leaving_timestamp %}
+                <input id="total_cost" type="text" class="form-control" value="₹{{ reservation.total_cost }}" readonly>
+            {% else %}
+                <input id="total_cost" type="text" class="form-control" value="Cant Calculate yet" readonly>
+            {% endif %}
+        </div>
+        <div class="text-center">
+            {% if not reservation.leaving_timestamp %}
+            <button type="submit" class="btn btn-primary">Release</button>
+            {% endif %}
+            <a href="{{ url_for('user_routes.user_dashboard') }}" class="btn btn-secondary ms-2">Back</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
