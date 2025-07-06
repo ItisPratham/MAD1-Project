@@ -1,21 +1,10 @@
-{% extends "base.html" %}
+{% extends "base_user_dashboard.html" %}
 
 {% block title %}User Dashboard{% endblock %}
 
-{% block body %}
-<div class="mt-5">
-    <div class="row align-items-center mb-5">
-        <div class="col-2 text-start">
-            <span class="btn btn-secondary disabled">Welcome {{ user.name }}</span>
-        </div>
-        <div class="col-8 d-flex justify-content-center gap-3">
-            <a href="{{ url_for('user_routes.user_dashboard') }}" class="btn btn-outline-primary">Home</a>
-            <a href="{{ url_for('auth_routes.logout') }}" class="btn btn-outline-primary">Logout</a>
-        </div>
-        <div class="col-2 text-end">
-            <a href="{{ url_for('user_routes.edit_profile') }}" class="btn btn-outline-secondary">Edit Profile</a>
-        </div>
-    </div>
+{% block header %}User Dashboard{% endblock %}
+
+{% block content %}
 
     <div class="text-center mb-4">
         <span class="btn btn-outline-dark disabled w-100">
@@ -57,33 +46,38 @@
             Recent parking history
         </span>
     </div>
-
-    <table class="table table-bordered table-striped text-center">
-        <thead class="table-bordered-dark">
-            <tr>
-                <th>Vehicle No.</th>
-                <th>Location</th>
-                <th>Time Spent</th>
-                <th>Day</th>
-                <th>Cost</th>
-                <th>Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for h in history %}
+    {% if history %}
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-bordered-dark">
                 <tr>
-                    <td>{{ h.vehicle_no }}</td>
-                    <td>{{ h.spot.lot.address }}</td>
-                    {% set hours = h.total_time // 3600 %}
-                    {% set minutes = (h.total_time % 3600) // 60 %}
-                    <td>{{ hours|int }}h {{ minutes|int }}m</td>
-                    <td>{{ h.parking_timestamp.strftime('%d-%b-%y')}}</td>
-                    <td>₹{{ h.total_cost }}</td>
-                    <td><a href="{{ url_for('user_routes.edit_spot', reservation_id=h.id) }}" style="text-decoration: none;">View</a></td>
+                    <th>Vehicle No.</th>
+                    <th>Location</th>
+                    <th>Time Spent</th>
+                    <th>Day</th>
+                    <th>Cost</th>
+                    <th>Details</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for h in history %}
+                    <tr>
+                        <td>{{ h.vehicle_no }}</td>
+                        <td>{{ h.spot.lot.address }}</td>
+                        {% set hours = h.total_time // 3600 %}
+                        {% set minutes = (h.total_time % 3600) // 60 %}
+                        <td>{{ hours|int }}h {{ minutes|int }}m</td>
+                        <td>{{ h.parking_timestamp.strftime('%d-%b-%y')}}</td>
+                        <td>₹{{ h.total_cost }}</td>
+                        <td><a href="{{ url_for('user_routes.edit_spot', reservation_id=h.id) }}" style="text-decoration: none;">View</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="text-center mb-4">
+            <strong style="background-color: aliceblue;">No previous parking session.</strong>
+        </div>
+    {% endif %}
 
     <br>
     <br>
@@ -141,7 +135,5 @@
             No parking lots found near "{{ request.args.get('Address') }}".
         </div>
     {% endif %}
-
-</div>
 
 {% endblock %}

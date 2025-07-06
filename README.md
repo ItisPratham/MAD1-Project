@@ -43,3 +43,19 @@ Show duration of parking spot once its released.
 Auto calculation of total cost once the spot is released.
 View current active parkings.
 Edit User details.
+
+6th July 2025
+Milestone 5 & 6 Completed
+Realised few of the objectives of milestone 5&6 were previously completed in previous milestones unknowingly.
+Added following functionalites:
+Added User's ddedicated parking history tab that will contain all past records.
+Added Chart's to user, that will display various statics wrt Parking Lots.
+Used base_user_dashboard.html to simplify user tabs.
+Added dedicated parking record's tab for admin to view.
+Added admin summary which displays a pie chart and a stacked bar chart along with a table, all of whom has properties related to parking lots.
+Modified:
+Logout button to side with edit profile for consistency in both admin and user interface.
+Also added if else when displaying various records, so if no records are found then will not display table heads.
+Note: Charts were created using Chart.js, which i learned basics of with the help of documentation as well as youtube videos.(Learned for first time.)
+
+CORE FUNCTIONALITIES ARE COMPLETED WITH MAYBE FEW PARTIAL RECOMMENDED/OPTIONAL ENHANCEMENTS

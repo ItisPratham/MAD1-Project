@@ -1,0 +1,51 @@
+{% extends "base_admin_dashboard.html" %}
+
+{% block title %}Parking Records{% endblock %}
+
+{% block header %}All Parking Records{% endblock %}
+
+
+{% block content %}
+
+    {% if records %}
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-bordered-dark">
+                <tr>
+                    <th>Res. Id</th>
+                    <th>Lot name</th>
+                    <th>User Id</th>
+                    <th>Vehicle no.</th>
+                    <th>Parking Date</th>
+                    <th>Time spent</th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in records %}
+                    <tr>
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.spot.lot.name }}</td>
+                        <td>{{ r.user_id }}</td>
+                        <td>{{ r.vehicle_no }}</td>
+                        <td>{{ r.parking_timestamp.strftime('%H:%M %d-%b-%y') }}</td>
+                        {% if r.leaving_timestamp %}
+                            {% set hours = r.total_time // 3600 %}
+                            {% set minutes = (r.total_time % 3600) // 60 %}
+                            <td>{{ hours|int }}h {{ minutes|int }}m</td>
+                            <td>{{ r.total_cost }}</td>
+                        {% else %}
+                            <td><em>Active</em></td>
+                            <td><em>Active</em></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <div class="text-center mb-4">
+            <strong style="background-color: aliceblue;">No parking records found.</strong>
+        </div>
+    {% endif %}
+
+{% endblock %}

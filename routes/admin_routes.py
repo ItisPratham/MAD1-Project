@@ -137,3 +137,24 @@ def activate_parking_spot(spot_id):
         db.session.commit()
         return redirect(url_for('admin_routes.admin_dashboard'))
     return redirect(url_for('auth_routes.admin_login'))
+
+@admin_routes.route('/admin-view-all-parking-records')
+def all_parking_records():
+    if session.get('username') and session.get('role') == 'admin':
+        records = ReserveParkingSpot.query.order_by(ReserveParkingSpot.id.desc()).all()
+        return render_template('admin_view_all_parking_records.html', records=records)
+    return redirect(url_for('auth_routes.admin_login'))
+
+@admin_routes.route('/admin-summary')
+def admin_summary():
+    if session.get('username') and session.get('role') == 'admin':
+        lots = ParkingLot.query.all()
+        summary_data = []
+        for lot in lots:
+            revenue = 0.0
+            for spot in lot.spots:
+                for reservation in spot.reservations:
+                    revenue += reservation.total_cost or 0
+            summary_data.append({'lot_name': lot.name, 'total_spots': len(lot.spots), 'available': lot.available, 'occupied': lot.occupied, 'inactive': lot.inactive, 'revenue': revenue})
+        return render_template('admin_summary.html', summary_data=summary_data)
+    return redirect(url_for('auth_routes.admin_login'))

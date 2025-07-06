@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block body %}
+<div class="mt-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-2 text-start">
+            <span class="btn btn-secondary disabled">Welcome {{ user.name }}</span>
+        </div>
+        <div class="col-8 d-flex justify-content-center gap-3">
+            <a href="{{ url_for('user_routes.user_dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
+            <a href="{{ url_for('user_routes.view_history') }}" class="btn btn-outline-primary">Parking History</a>
+            <a href="{{ url_for('user_routes.charts') }}" class="btn btn-outline-primary">Charts/Summary</a>
+        </div>
+        <div class="col-2 d-flex justify-content-end gap-2">
+            <a href="{{ url_for('user_routes.edit_profile') }}" class="btn btn-outline-secondary">Edit Profile</a>
+            <a href="{{ url_for('auth_routes.logout') }}" class="btn btn-outline-primary">Logout</a>
+        </div>
+    </div>
+    
+    <div class="text-center mb-4">
+        <span class="btn btn-outline-dark disabled w-100">
+            {% block header %}
+            {% endblock %}
+        </span>
+    </div>
+    
+    {% block content %}{% endblock %}
+</div>
+
+{% endblock %}

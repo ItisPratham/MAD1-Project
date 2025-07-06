@@ -38,7 +38,8 @@
                 <th>Vehicle no.</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Cost / hr</th>
+                <th>Duration</th>
+                <th>Total Cost</th>
             </tr>
         </thead>
         <tbody>
@@ -54,8 +55,10 @@
                     {% else %}
                         <em>Active</em>
                     {% endif %}
-                </td>
-                <td>{{ r.cost_per_unit_time }}</td>
+                {% set hours = r.total_time // 3600 %}
+                {% set minutes = (r.total_time % 3600) // 60 %}
+                <td>{{ hours|int }}h {{ minutes|int }}m</td>
+                <td>₹{{ r.total_cost }}</td>
             </tr>
             {% endfor %}
         </tbody>

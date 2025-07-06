@@ -10,7 +10,7 @@ def user_dashboard():
         user = User.query.filter_by(username=session.get('username')).first()
         if not user:
             return render_template('error.html', message='User does not exist.', retry_url=url_for('auth_routes.user_login'))
-        history = ReserveParkingSpot.query.filter(ReserveParkingSpot.user_id == user.id, ReserveParkingSpot.leaving_timestamp != None).all()
+        history = ReserveParkingSpot.query.filter(ReserveParkingSpot.user_id == user.id, ReserveParkingSpot.leaving_timestamp != None).order_by(ReserveParkingSpot.id.desc()).limit(5).all()
         current = ReserveParkingSpot.query.filter(ReserveParkingSpot.user_id == user.id, ReserveParkingSpot.leaving_timestamp == None).all()
         address = request.args.get('Address')
         lots = []
@@ -18,6 +18,16 @@ def user_dashboard():
             address = '%'+address+'%'
             lots = ParkingLot.query.filter(ParkingLot.address.ilike(address)).all()
         return render_template('user_dashboard.html', user=user, history=history, current=current, lots=lots)
+    return redirect(url_for('auth_routes.user_login'))
+
+@user_routes.route('/user-view-parking-history')
+def view_history():
+    if session.get('username') and session.get('role') == 'user':
+        user = User.query.filter_by(username=session.get('username')).first()
+        if not user:
+            return render_template('error.html', message='User does not exist.', retry_url=url_for('auth_routes.user_login'))
+        history = ReserveParkingSpot.query.filter(ReserveParkingSpot.user_id == user.id, ReserveParkingSpot.leaving_timestamp != None).order_by(ReserveParkingSpot.id.desc()).all()
+        return render_template('user_view_history.html', user=user, history=history)
     return redirect(url_for('auth_routes.user_login'))
 
 @user_routes.route('/user-edit-profile', methods=['GET', 'POST'])
@@ -70,4 +80,27 @@ def book_spot(lot_id):
             db.session.commit()
             return redirect(url_for('user_routes.user_dashboard'))
         return render_template('user_book_spot.html', user=user, spot=spot)
+    return redirect(url_for('auth_routes.user_login'))
+
+@user_routes.route('/user-charts')
+def charts():
+    if session.get('username') and session.get('role') == 'user':
+        user = User.query.filter_by(username=session.get('username')).first()
+        if not user:
+            return render_template('error.html', message='User does not exist.', retry_url=url_for('auth_routes.user_login'))
+        lots = ParkingLot.query.all()
+        summary_data = []
+        for lot in lots:
+            cost = 0.0
+            time = 0
+            count = 0
+            for spot in lot.spots:
+                for reservation in spot.reservations:
+                    if reservation.user_id == user.id:
+                        cost += reservation.total_cost or 0
+                        time += reservation.total_time
+                        count += 1
+            if count != 0:
+                summary_data.append({'lot_name': lot.name, 'time': time, 'cost':  cost, 'count': count})
+        return render_template('user_charts.html', summary_data=summary_data, user=user)
     return redirect(url_for('auth_routes.user_login'))

@@ -11,10 +11,12 @@
         <div class="col-8 d-flex justify-content-center gap-3">
             <a href="{{ url_for('admin_routes.admin_dashboard') }}" class="btn btn-outline-primary">Dashboard</a>
             <a href="{{ url_for('admin_routes.user_detail') }}" class="btn btn-outline-primary">User Details</a>
-            <a href="{{ url_for('auth_routes.logout') }}" class="btn btn-outline-primary">Logout</a>
+            <a href="{{ url_for('admin_routes.all_parking_records') }}" class="btn btn-outline-primary">Parking Records</a>
+            <a href="{{ url_for('admin_routes.admin_summary') }}" class="btn btn-outline-primary">Summary</a>
         </div>
-        <div class="col-2 text-end">
+        <div class="col-2 d-flex justify-content-end gap-2">
             <a href="{{ url_for('admin_routes.edit_profile') }}" class="btn btn-outline-secondary">Edit Profile</a>
+            <a href="{{ url_for('auth_routes.logout') }}" class="btn btn-outline-secondary">Logout</a>
         </div>
     </div>
 
@@ -25,7 +27,7 @@
         </span>
     </div>
 
-    {% block content %}Content{% endblock %}
+    {% block content %}{% endblock %}
 </div>
 
 {% endblock %}
