@@ -1,18 +1,21 @@
 from flask import render_template, request, redirect, url_for, session, Blueprint
 from models import db, User, ParkingLot, ParkingSpot, ReserveParkingSpot
+from flask_login import login_required, current_user
 
 admin_routes = Blueprint('admin_routes', __name__)
 
 @admin_routes.route('/admin-dashboard')
+@login_required
 def admin_dashboard():
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         parking_lots = ParkingLot.query.all()
         return render_template('admin_dashboard.html', parking_lots=parking_lots)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-add-parking-lot', methods=['GET', 'POST'])
+@login_required
 def add_lot():
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         if request.method == 'POST':
             name = request.form['LotName']
             price = float(request.form['Price'])
@@ -31,37 +34,39 @@ def add_lot():
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-edit-profile', methods=['GET', 'POST'])
+@login_required
 def edit_profile():
-    if session.get('username') and session.get('role') == 'admin':
-        admin = User.query.filter_by(username=session['username'], role='admin').first()
+    if current_user.role == 'admin':
         if request.method == 'POST':
-            admin.username = request.form['Username']
-            admin.password = request.form['Password']
+            current_user.username = request.form['Username']
+            current_user.set_password(request.form['Password'])
             db.session.commit()
-            session['username'] = request.form['Username']
             return redirect(url_for('admin_routes.admin_dashboard'))
         return render_template('admin_edit_profile.html')
     return redirect(url_for('auth_routes.admin_login'))
 
 
 @admin_routes.route('/admin-view-users')
+@login_required
 def user_detail():
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         users = User.query.filter_by(role='user').all()
         return render_template('admin_view_users.html', users=users)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-view-user/<int:user_id>')
+@login_required
 def view_user(user_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         user = User.query.get_or_404(user_id)
         reservations = ReserveParkingSpot.query.filter_by(user_id=user_id).all()
         return render_template('admin_view_user.html', user=user, reservations=reservations)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-edit-parking-lot/<int:lot_id>', methods=['GET', 'POST'])
+@login_required
 def edit_lot(lot_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         lot = ParkingLot.query.get_or_404(lot_id)
         if request.method == 'POST':
             lot.name = request.form['LotName']
@@ -96,8 +101,9 @@ def edit_lot(lot_id):
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-delete-parking-lot/<int:lot_id>', methods=['POST'])
+@login_required
 def delete_parking_lot(lot_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         lot = ParkingLot.query.get_or_404(lot_id)
         active_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status='A').all()
         for spot in active_spots:
@@ -106,9 +112,10 @@ def delete_parking_lot(lot_id):
         return redirect(url_for('admin_routes.admin_dashboard'))
     return redirect(url_for('auth_routes.admin_login'))
 
-@admin_routes.route('/admin-view-parking-spot/<int:spot_id>', )
+@admin_routes.route('/admin-view-parking-spot/<int:spot_id>')
+@login_required
 def view_parking_spot(spot_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         spot = ParkingSpot.query.get_or_404(spot_id)
         if not spot:
             return render_template('error.html', message="Parking Spot not found.", retry_url=url_for('admin_routes.admin_dashboard'))
@@ -117,8 +124,9 @@ def view_parking_spot(spot_id):
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-delete-parking-spot/<int:spot_id>', methods=['POST'])
+@login_required
 def delete_parking_spot(spot_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         spot = ParkingSpot.query.get_or_404(spot_id)
         if spot.status != 'A':
             return render_template('error.html', message="Cannot deactivate the spot as it is not available.", retry_url=url_for('admin_routes.view_parking_spot', spot_id=spot_id))
@@ -128,8 +136,9 @@ def delete_parking_spot(spot_id):
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-activate-parking-spot/<int:spot_id>', methods=['POST'])
+@login_required
 def activate_parking_spot(spot_id):
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         spot = ParkingSpot.query.get_or_404(spot_id)
         if spot.status != 'I':
             return render_template('error.html', message="Cannot activate the available spot.", retry_url=url_for('admin_routes.view_parking_spot', spot_id=spot_id))
@@ -139,15 +148,17 @@ def activate_parking_spot(spot_id):
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-view-all-parking-records')
+@login_required
 def all_parking_records():
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         records = ReserveParkingSpot.query.order_by(ReserveParkingSpot.id.desc()).all()
         return render_template('admin_view_all_parking_records.html', records=records)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-summary')
+@login_required
 def admin_summary():
-    if session.get('username') and session.get('role') == 'admin':
+    if current_user.role == 'admin':
         lots = ParkingLot.query.all()
         summary_data = []
         for lot in lots:

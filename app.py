@@ -4,6 +4,7 @@ from datetime import datetime
 from routes.user_routes import user_routes
 from routes.admin_routes import admin_routes
 from routes.auth_routes import auth_routes
+from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.sqlite3"
@@ -15,10 +16,19 @@ app.register_blueprint(user_routes)
 app.register_blueprint(admin_routes)
 app.register_blueprint(auth_routes)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth_routes.user_login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 def create_admin():
     admin = User.query.filter_by(role='admin').first()
     if not admin:
-        admin = User(name='admin', age=20, username='admin', password='admin', role='admin')
+        admin = User(name='admin', age=20, username='admin', role='admin')
+        admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
 
