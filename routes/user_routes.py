@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, session, Blueprint, reques
 from models import User, ReserveParkingSpot, ParkingLot, db
 from datetime import datetime
 from flask_login import login_required, current_user
+import re
 
 user_routes = Blueprint('user_routes', __name__)
 
@@ -28,9 +29,20 @@ def view_history():
 @login_required
 def edit_profile():
     if request.method == 'POST':
-        current_user.name = request.form['Name']
-        current_user.username = request.form['Username']
-        current_user.set_password(request.form['Password'])
+        name = request.form['Name'].strip()
+        username = request.form['Username'].strip().lower()
+        password = request.form['Password']
+
+        if not re.match(r'^[A-Za-z\s]{3,}$', name):
+            return render_template('error.html', message="Invalid name. Name must have atleast 3 characters.", retry_url=url_for('auth_routes.user_registration'))
+        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', username):
+            return render_template('error.html', message="Invalid email format.", retry_url=url_for('auth_routes.user_registration'))
+        if not re.match(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$', password):
+            return render_template('error.html', message="Password must be 8-12 characters long with atleast 1 num, and 1 uppercase and 1 lowercase alphabet.", retry_url=url_for('auth_routes.user_registration'))
+
+        current_user.name = name
+        current_user.username = username
+        current_user.set_password(password)
         db.session.commit()
         session['username'] = request.form['Username']
         return redirect(url_for('user_routes.user_dashboard'))
@@ -56,7 +68,11 @@ def book_spot(lot_id):
         return render_template('error.html', message='No Available Spots, Try another parking lot', retry_url=url_for('auth_routes.user_dashboard'))
     spot = available_spots[0]
     if request.method == 'POST':
-        vehicle_number = request.form.get('vehicle_number')
+        vehicle_number = request.form.get('vehicle_number').strip().upper()
+        
+        if not re.match(r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$', vehicle_number):
+            return render_template('error.html', message="Enter valid vehicle no of format 'AB01CD2345'", retry_url=url_for('user_routes.user_dashboard'))
+
         reservation = ReserveParkingSpot(spot_id=spot.id, user_id=int(current_user.id), parking_timestamp=datetime.now(), cost_per_unit_time=lot.price, vehicle_no=vehicle_number)
         spot.status = 'O'
         db.session.add(reservation)

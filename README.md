@@ -85,3 +85,10 @@ And added password storage hashing using werkzeug.security, by adding methods to
 Charts and Visualizations were previously unknowingly completed while completing milestone5&6.  
 
 ---
+
+### 10th July 2025
+**Milestone: Frontend and Backend Validation**
+Added form validation using HTML5 and also with the help of JS in user registration.  
+With the help of JS made toggle button to see the password.  
+Form validation both frontend and backend were done using RE[Regular Expressions], RE's were taken from popular websites by quick google search, easier RE's were formulated by myself such as name restrictions.  
+User re library for matching on backend side.  

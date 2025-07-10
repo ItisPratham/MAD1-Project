@@ -13,15 +13,17 @@
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
-            <input id="name" type="text" class="form-control" name="Name" required>
+            <input id="name" type="text" class="form-control" name="Name" pattern="[A-Za-z\s]{3,}" title="Name should have atleast 3 characters" autofocus required>
         </div>
         <div class="mb-3">
             <label for="username" class="form-label">New Username(email)</label>
-            <input id="username" type="email" class="form-control" name="Username" required>
+            <input id="username" type="email" class="form-control" name="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Password must be 8-12 characters long with atleast 1 num, and 1 uppercase and 1 lowercase alphabet." required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input id="password" type="password" class="form-control" name="Password" required>
+            <input id="password" type="password" class="form-control" name="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}" title="Password must be 8-12 characters long with atleast 1 num, and 1 uppercase and 1 lowercase alphabet." required>
+            <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePassword()">
+            <label class="form-check-label" for="showPassword">Show Password</label>
         </div>
         <div>
             <button type="submit" class="btn btn-success">Save Changes</button>
@@ -31,3 +33,10 @@
 </div>
 
 {% endblock %}
+
+<script>
+    function togglePassword(){
+        const passwordInput = document.getElementById('password');
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    }
+</script>

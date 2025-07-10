@@ -8,12 +8,14 @@
     <h2 class="text-center mb-4">User Login</h2>
     <form method="post">
         <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input id="username" type="text" class="form-control" name="Username" required>
+            <label for="username" class="form-label">Username(email)</label>
+            <input id="username" type="email" class="form-control" name="Username" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" autofocus required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input id="password" type="password" class="form-control" name="Password" required>
+            <input id="password" type="password" class="form-control" name="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}" title="Password must be 8-12 characters long with atleast 1 num, and 1 uppercase and 1 lowercase alphabet." required>
+            <input type="checkbox" class="form-check-input" id="showPassword" onclick="togglePassword()">
+            <label class="form-check-label" for="showPassword">Show Password</label>
         </div>
         <button type="submit" class="btn btn-primary">Login</button>
     </form>
@@ -24,5 +26,12 @@
         For Admin login <a href="{{ url_for('auth_routes.admin_login') }}" style="text-decoration: none;">Click here</a>
     </p>
 </div>
+
+<script>
+    function togglePassword(){
+        const passwordInput = document.getElementById('password');
+        passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+    }
+</script>
 
 {% endblock %}

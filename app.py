@@ -27,8 +27,8 @@ def load_user(user_id):
 def create_admin():
     admin = User.query.filter_by(role='admin').first()
     if not admin:
-        admin = User(name='admin', age=20, username='admin', role='admin')
-        admin.set_password('admin123')
+        admin = User(name='admin', age=20, username='admin@mail.com', role='admin')
+        admin.set_password('Admin123')
         db.session.add(admin)
         db.session.commit()
 

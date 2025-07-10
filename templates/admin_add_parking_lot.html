@@ -8,23 +8,23 @@
     <form method="post">
         <div class="mb-3">
             <label for="lot_name" class="form-label">Lot Name</label>
-            <input id="lot_name" type="text" class="form-control" name="LotName" required>
+            <input id="lot_name" type="text" class="form-control" name="LotName" pattern="(?=.*[A-Z])(?=.*\d).{2,}" title="Atleast 1 Capital letter as well as 1 number required." autofocus required>
         </div>
         <div class="mb-3">
-            <label for="price" class="form-label">Price per Hour</label>
-            <input id="price" type="number" step="0.1" class="form-control" name="Price" required>
+            <label for="price" class="form-label">Price per Hour(₹)</label>
+            <input id="price" type="number" step="0.1" class="form-control" name="Price" min="50" title="Price must be atleast ₹50." required>
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <textarea id="address" class="form-control" name="Address" required></textarea>
+            <input id="address" class="form-control" name="Address" min="10" max="50" title="Address should be 10-50 characters long." required>
         </div>
         <div class="mb-3">
             <label for="pin_code" class="form-label">Pin Code</label>
-            <input id= "pin_code" type="number" class="form-control" name="PinCode" required>
+            <input id= "pin_code" type="number" class="form-control" min="100000" max="999999" title="Pincode will be exactly of 6 digits." name="PinCode" required>
         </div>
         <div class="mb-3">
             <label for="spots_count" class="form-label">Number of Spots</label>
-            <input id="spots_count" type="number" class="form-control" name="SpotsCount" required>
+            <input id="spots_count" type="number" class="form-control" name="SpotsCount" min="1" title="There must be atleast one parking spot." required>
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success">Add Lot</button>

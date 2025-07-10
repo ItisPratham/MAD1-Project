@@ -8,27 +8,27 @@
     <form method="post">
         <div class="mb-3">
             <label for="lot_id" class="form-label">Lot Id</label>
-            <input id="lot_id" type="text" class="form-control" name="LotId" value="{{ lot.id }}" readonly required>
+            <input id="lot_id" type="text" class="form-control" name="LotId" value="{{ lot.id }}" readonly>
         </div>
         <div class="mb-3">
             <label for="lot_name" class="form-label">New Lot Name</label>
-            <input id="lot_name" type="text" class="form-control" name="LotName" value="{{ lot.name }}" required>
+            <input id="lot_name" type="text" class="form-control" name="LotName" value="{{ lot.name }}" pattern="(?=.*[A-Z])(?=.*\d).{2,}" title="Atleast 1 Capital letter as well as 1 number required." autofocus required>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">Price per Hour</label>
-            <input id="price" type="number" step="0.1" class="form-control" name="Price" value="{{ lot.price }}" required>
+            <input id="price" type="number" step="0.1" class="form-control" name="Price" min="50" value="{{ lot.price }}" required>
         </div>
         <div class="mb-3">
             <label for="address" class="form-label">Address</label>
-            <textarea id="address" class="form-control" name="Address" readonly required>{{ lot.address }}</textarea>
+            <input id="address" class="form-control" name="Address" value="{{ lot.address }}" readonly>
         </div>
         <div class="mb-3">
             <label for="pin_code" class="form-label">Pin Code</label>
-            <input id= "pin_code" type="number" class="form-control" name="PinCode" value="{{ lot.pin_code }}" readonly required>
+            <input id= "pin_code" type="number" class="form-control" name="PinCode" value="{{ lot.pin_code }}" readonly>
         </div>
         <div class="mb-3">
             <label for="spots_count" class="form-label">Number of Spots</label>
-            <input id="spots_count" type="number" class="form-control" name="SpotsCount" value="{{ lot.spots_count }}" required>
+            <input id="spots_count" type="number" class="form-control" name="SpotsCount" min="1" value="{{ lot.spots_count }}" required>
         </div>
         <div class="text-center">
             <button type="submit" class="btn btn-success">Update Lot</button>

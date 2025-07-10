@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, session, Blueprint
 from models import db, User, ParkingLot, ParkingSpot, ReserveParkingSpot
 from flask_login import login_required, current_user
+import re
 
 admin_routes = Blueprint('admin_routes', __name__)
 
@@ -17,11 +18,23 @@ def admin_dashboard():
 def add_lot():
     if current_user.role == 'admin':
         if request.method == 'POST':
-            name = request.form['LotName']
+            name = request.form['LotName'].strip()
             price = float(request.form['Price'])
-            address = request.form['Address']
+            address = request.form['Address'].strip()
             pin_code = int(request.form['PinCode'])
             spots_count = int(request.form['SpotsCount'])
+
+            if not re.match(r'(?=.*[A-Z])(?=.*\d).{2,}', name):
+                return render_template('error.html', message="Invalid lot name. Atleast 1 Capital letter as well as 1 number required.", retry_url=url_for('admin_routes.add_lot'))
+            if price < 50:
+                return render_template('error.html', message="Price must be atleast ₹50.", retry_url=url_for('admin_routes.add_lot'))
+            if not (10 <= len(address) <= 50):
+                return render_template('error.html', message="Address should be 10-50 characters long.", retry_url=url_for('admin_routes.add_lot') )
+            if pin_code < 100000 or pin_code > 999999:
+                return render_template('error.html', message="Pincode will be exactly of 6 digits.", retry_url=url_for('admin_routes.add_lot'))
+            if spots_count < 1:
+                return render_template('error.html', message="There must be atleast one parking spot.", retry_url=url_for('admin_routes.add_lot'))
+            
             new_lot = ParkingLot(name=name, price=price, address=address, pin_code=pin_code, spots_count=spots_count)
             db.session.add(new_lot)
             db.session.commit()
@@ -38,8 +51,16 @@ def add_lot():
 def edit_profile():
     if current_user.role == 'admin':
         if request.method == 'POST':
-            current_user.username = request.form['Username']
-            current_user.set_password(request.form['Password'])
+            username = request.form['Username'].strip().lower()
+            password = request.form['Password']
+
+            if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', username):
+                return render_template('error.html', message="Invalid email format.", retry_url=url_for('auth_routes.admin_login'))
+            if not re.match(r'^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,12}$', password):
+                return render_template('error.html', message="Password must be 8-12 characters long with atleast 1 num, and 1 uppercase and 1 lowercase alphabet.", retry_url=url_for('auth_routes.admin_login'))
+
+            current_user.username = username
+            current_user.set_password(password)
             db.session.commit()
             return redirect(url_for('admin_routes.admin_dashboard'))
         return render_template('admin_edit_profile.html')
@@ -69,17 +90,25 @@ def edit_lot(lot_id):
     if current_user.role == 'admin':
         lot = ParkingLot.query.get_or_404(lot_id)
         if request.method == 'POST':
-            lot.name = request.form['LotName']
-            lot.price = float(request.form['Price'])
+            name = request.form['LotName'].strip()
+            price = float(request.form['Price'])
             spots_count = int(request.form['SpotsCount'])
+
+            if not re.match(r'(?=.*[A-Z])(?=.*\d).{2,}', name):
+                return render_template('error.html', message="Invalid lot name. Atleast 1 Capital letter as well as 1 number required.", retry_url=url_for('admin_routes.add_lot'))
+            if price < 50:
+                return render_template('error.html', message="Price must be atleast ₹50.", retry_url=url_for('admin_routes.add_lot'))
+            if spots_count < 1:
+                return render_template('error.html', message="There must be atleast one parking spot.", retry_url=url_for('admin_routes.add_lot'))
+
+            lot.name = name
+            lot.price = price
             active_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status='A').order_by(ParkingSpot.id.desc()).all()
             active_count = len(active_spots)
             if spots_count < active_count:
                 extra_count = active_count - spots_count
                 surplus_spots = active_spots[:extra_count]
                 for spot in surplus_spots:
-                    if spot.status != 'A':
-                        return render_template('error.html', message="Cannot reduce spots as some are currently occupied", retry_url=url_for('admin_routes.edit_lot', lot_id=lot_id))
                     spot.status = 'I'
             elif spots_count > active_count:
                 add_count = spots_count - active_count
