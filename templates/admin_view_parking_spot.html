@@ -29,6 +29,31 @@
             <p><strong>Current Status:</strong> {{ 'Available' if spot.status == 'A' else 'Occupied' if spot.status == 'O' else 'Inactive' }}</p>
         </div>
     </div>
+
+    {% if active %}
+    <br>
+    <h4>Active</h4>
+    <table class="table table-bordered table-striped text-center">
+            <thead>
+                <tr>
+                    <th>Reservation ID</th>
+                    <th>User ID</th>
+                    <th>Vehicle no.</th>
+                    <th>Start Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ active.id }}</td>
+                    <td>{{ active.user_id }}</td>
+                    <td>{{ active.vehicle_no }}</td>
+                    <td>{{ active.parking_timestamp.strftime('%H:%M %d-%m-%y') }}</td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    
+    <br>
     <h4>Reservation History</h4>
     {% if reservations %}
         <table class="table table-bordered table-striped text-center">

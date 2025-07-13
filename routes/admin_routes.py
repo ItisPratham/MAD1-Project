@@ -28,7 +28,7 @@ def add_lot():
                 return render_template('error.html', message="Invalid lot name. Atleast 1 Capital letter as well as 1 number required.", retry_url=url_for('admin_routes.add_lot'))
             if price < 50:
                 return render_template('error.html', message="Price must be atleast ₹50.", retry_url=url_for('admin_routes.add_lot'))
-            if not (10 <= len(address) <= 50):
+            if not (10 <= len(address) <= 100):
                 return render_template('error.html', message="Address should be 10-50 characters long.", retry_url=url_for('admin_routes.add_lot') )
             if pin_code < 100000 or pin_code > 999999:
                 return render_template('error.html', message="Pincode will be exactly of 6 digits.", retry_url=url_for('admin_routes.add_lot'))
@@ -148,8 +148,9 @@ def view_parking_spot(spot_id):
         spot = ParkingSpot.query.get_or_404(spot_id)
         if not spot:
             return render_template('error.html', message="Parking Spot not found.", retry_url=url_for('admin_routes.admin_dashboard'))
-        reservations = ReserveParkingSpot.query.filter_by(spot_id=spot_id).order_by(ReserveParkingSpot.parking_timestamp.desc()).all()
-        return render_template('admin_view_parking_spot.html', spot=spot, reservations=reservations)
+        reservations = ReserveParkingSpot.query.filter_by(spot_id=spot_id).filter(ReserveParkingSpot.leaving_timestamp.isnot(None)).order_by(ReserveParkingSpot.parking_timestamp.desc()).all()
+        active = ReserveParkingSpot.query.filter_by(spot_id=spot_id).filter(ReserveParkingSpot.leaving_timestamp.is_(None)).order_by(ReserveParkingSpot.parking_timestamp.desc()).first()
+        return render_template('admin_view_parking_spot.html', spot=spot, reservations=reservations, active=active)
     return redirect(url_for('auth_routes.admin_login'))
 
 @admin_routes.route('/admin-delete-parking-spot/<int:spot_id>', methods=['POST'])
@@ -194,7 +195,8 @@ def admin_summary():
             revenue = 0.0
             for spot in lot.spots:
                 for reservation in spot.reservations:
-                    revenue += reservation.total_cost or 0
+                    if reservation.leaving_timestamp:
+                        revenue += reservation.total_cost
             summary_data.append({'lot_name': lot.name, 'total_spots': len(lot.spots), 'available': lot.available, 'occupied': lot.occupied, 'inactive': lot.inactive, 'revenue': revenue})
         return render_template('admin_summary.html', summary_data=summary_data)
     return redirect(url_for('auth_routes.admin_login'))

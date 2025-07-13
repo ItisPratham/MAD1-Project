@@ -9,7 +9,7 @@ class ReserveParkingSpot(db.Model):
     parking_timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now)
     leaving_timestamp = db.Column(db.DateTime, nullable=True)
     cost_per_unit_time = db.Column(db.Float, nullable=False)
-    vehicle_no = db.Column(db.String, nullable=False)
+    vehicle_no = db.Column(db.String(10), nullable=False)
 
     @property
     def total_time(self):

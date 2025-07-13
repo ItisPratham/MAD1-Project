@@ -9,7 +9,7 @@
     <form method="post">
         <div class="mb-3">
             <label for="id" class="form-label">Id</label>
-            <input id="username" type="text" class="form-control" name="Id" value="{{ user.id }}" readonly>
+            <input id="id" type="text" class="form-control" name="Id" value="{{ user.id }}" readonly>
         </div>
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
@@ -32,11 +32,11 @@
     </form>
 </div>
 
-{% endblock %}
-
 <script>
     function togglePassword(){
         const passwordInput = document.getElementById('password');
         passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
     }
 </script>
+
+{% endblock %}

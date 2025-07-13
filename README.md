@@ -92,3 +92,21 @@ Added form validation using HTML5 and also with the help of JS in user registrat
 With the help of JS made toggle button to see the password.  
 Form validation both frontend and backend were done using RE[Regular Expressions], RE's were taken from popular websites by quick google search, easier RE's were formulated by myself such as name restrictions.  
 User re library for matching on backend side.  
+
+---
+
+### 13th July 2025
+**Final Project Completed**
+Solved an unexpected error, although it was pretty silly.  
+Errors  
+1 Admin summary would crash if any spot is occupied.  
+2 Admin view spot would crash if we want to view details of occupied spot.  
+Crash Reasons(respectively)  
+1 Bad revenue calculation  
+2 Didn't filter active spots.
+Solutions(resectively)  
+1 Added if statement  
+2 Added filer in db query  
+Additional Changes  
+Slight modification of constraints in ParkingLot and ReserveParkingSpot db.  
+Finally added Project report with video.
