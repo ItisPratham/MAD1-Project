@@ -1,7 +1,9 @@
 # vehicle-parking-app
 
-This is the github repo for my MAD1 Project of May2025 Term.
-Project Statement: https://lnkd.in/dhmBcmav
+This is the github repo for my MAD1 Project of May2025 Term.  
+Project Statement: https://lnkd.in/dhmBcmav  
+Project Demo Video Report: https://youtu.be/jFex81LihXw  
+Score: S grade(100/100)  
 
 ## Vehicle Parking App - V1
 
